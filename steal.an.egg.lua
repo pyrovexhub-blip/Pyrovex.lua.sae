@@ -1,5 +1,5 @@
 -- Pyrovex Hub - Game Verification System
-local SupportedGameID = 1234567890 -- <<< PALITAN ITO ng totoong Place ID ng Steal an Egg
+local SupportedGameID = 107778070777162 -- <<< PALITAN ITO ng totoong Place ID ng Steal an Egg
 
 -- Kunin ang kasalukuyang Place ID ng laro
 local currentPlaceId = game.PlaceId
