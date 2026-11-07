@@ -1,3 +1,32 @@
+-- Pyrovex Hub - Game Verification System
+local SupportedGameID = 1234567890 -- <<< PALITAN ITO ng totoong Place ID ng Steal an Egg
+
+-- Kunin ang kasalukuyang Place ID ng laro
+local currentPlaceId = game.PlaceId
+
+if currentPlaceId == SupportedGameID then
+    -- DITO ILALAGAY ANG BUONG SCRIPT NG STEAL AN EGG
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Pyrovex Hub",
+        Text = "Script executed successfully! Enjoy hacking.",
+        Duration = 5
+    })
+    
+    print("Welcome to Pyrovex Hub - Steal an Egg Script Loaded.")
+    
+    -- [Ilagay ang iyong Anti-AFK, Spawner, o Bypass code dito]
+    
+else
+    -- KUNG HINDI "STEAL AN EGG" ANG LARO, LALABAS ANG NOTIFICATION NA ITO
+    game:GetService("StarterGui"):SetCore("SendNotification", {
+        Title = "Pyrovex Hub Error",
+        Text = "Not Supported Game! This script is only for Steal an Egg.",
+        Duration = 7
+    })
+    
+    warn("Pyrovex Hub: Execution blocked. Unsupported game detected.")
+end
+
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
