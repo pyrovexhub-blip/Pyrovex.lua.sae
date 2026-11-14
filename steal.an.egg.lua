@@ -1,30 +1,34 @@
--- Pyrovex Hub - Game Verification System
-local SupportedGameID = 107778070777162 
 
--- Kunin ang kasalukuyang Place ID ng laro
+--==================================================
+-- PYROVEX HUB | STEAL AN EGG
+-- PREMIUM UI ENHANCEMENT
+-- Original Panel Size: 190 x 210
+-- Original Functions: Preserved
+--==================================================
+
+-- GAME VERIFICATION
+local SupportedGameID = 107778070777162
 local currentPlaceId = game.PlaceId
 
 if currentPlaceId ~= SupportedGameID then
-    -- KUNG HINDI TUMUGMA ANG PLACE ID, LALABAS ANG ERROR AT HINDI TATAKBO ANG SCRIPT
     game:GetService("StarterGui"):SetCore("SendNotification", {
         Title = "Pyrovex Hub Error",
         Text = "Not Supported Game! This script is only for Steal an Egg.",
         Duration = 7
     })
     warn("Pyrovex Hub: Execution blocked. Unsupported game detected.")
-    return -- HINDI NA TATAKBO ANG SCRIPT KUNG MALI ANG LARO
+    return
 end
 
--- ✅ KUNG TAMA ANG LARO, MAGPAPATULOY ANG SCRIPT
 game:GetService("StarterGui"):SetCore("SendNotification", {
     Title = "Pyrovex Hub",
     Text = "Script executed successfully! Enjoy hacking.",
     Duration = 5
 })
+
 print("Welcome to Pyrovex Hub - Steal an Egg Script Loaded.")
 
--- === BUONG SCRIPT MAGSISIMULA DITO ===
-
+-- SERVICES
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
@@ -41,6 +45,10 @@ local AdminEnabled = false
 local AntiHitActive = false
 local Billboard
 
+--==================================================
+-- PREMIUM COLOR SYSTEM
+--==================================================
+
 local Blue = Color3.fromRGB(55, 115, 255)
 local Purple = Color3.fromRGB(145, 65, 255)
 local Dark = Color3.fromRGB(18, 17, 29)
@@ -48,12 +56,29 @@ local TextColor = Color3.fromRGB(240, 237, 255)
 local Red = Color3.fromRGB(255, 65, 90)
 local Muted = Color3.fromRGB(145, 140, 165)
 
+local DeepPurple = Color3.fromRGB(35, 20, 65)
+local SoftPurple = Color3.fromRGB(100, 65, 180)
+local DarkBlue = Color3.fromRGB(20, 35, 75)
+local White = Color3.fromRGB(255, 255, 255)
+
 local GradientColors = ColorSequence.new({
     ColorSequenceKeypoint.new(0, Purple),
-    ColorSequenceKeypoint.new(0.35, Blue),
-    ColorSequenceKeypoint.new(0.7, Color3.fromRGB(30, 30, 65)),
+    ColorSequenceKeypoint.new(0.25, Blue),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(190, 85, 255)),
+    ColorSequenceKeypoint.new(0.75, Blue),
     ColorSequenceKeypoint.new(1, Purple)
 })
+
+local TextGradientColors = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, White),
+    ColorSequenceKeypoint.new(0.35, Color3.fromRGB(205, 185, 255)),
+    ColorSequenceKeypoint.new(0.7, Color3.fromRGB(125, 170, 255)),
+    ColorSequenceKeypoint.new(1, White)
+})
+
+--==================================================
+-- SCREEN GUI
+--==================================================
 
 local Gui = Instance.new("ScreenGui")
 Gui.Name = "PremiumBadgePanel"
@@ -62,6 +87,10 @@ Gui.DisplayOrder = 100
 Gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 Gui.Parent = PlayerGui
 
+--==================================================
+-- UI ANIMATION HELPERS
+--==================================================
+
 local function Corner(Object, Radius)
     local C = Instance.new("UICorner")
     C.CornerRadius = UDim.new(0, Radius)
@@ -69,26 +98,55 @@ local function Corner(Object, Radius)
     return C
 end
 
+local function Tween(Object, Duration, Style, Properties, Direction)
+    local Animation = TweenService:Create(
+        Object,
+        TweenInfo.new(
+            Duration,
+            Style or Enum.EasingStyle.Quint,
+            Direction or Enum.EasingDirection.Out
+        ),
+        Properties
+    )
+
+    Animation:Play()
+    return Animation
+end
+
 local function GradientOutline(Object, Thickness)
     local S = Instance.new("UIStroke")
     S.Thickness = Thickness
     S.Color = Purple
+    S.Transparency = 0.1
+    S.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     S.Parent = Object
 
     local G = Instance.new("UIGradient")
     G.Color = GradientColors
+    G.Rotation = 0
     G.Parent = S
 
     TweenService:Create(
         G,
-        TweenInfo.new(4, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1),
+        TweenInfo.new(
+            5,
+            Enum.EasingStyle.Linear,
+            Enum.EasingDirection.InOut,
+            -1
+        ),
         {Rotation = 360}
     ):Play()
 
     TweenService:Create(
         S,
-        TweenInfo.new(1.4, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut, -1, true),
-        {Transparency = 0.4}
+        TweenInfo.new(
+            1.8,
+            Enum.EasingStyle.Sine,
+            Enum.EasingDirection.InOut,
+            -1,
+            true
+        ),
+        {Transparency = 0.55}
     ):Play()
 
     return S
@@ -96,18 +154,26 @@ end
 
 local function AddTextGradient(Label)
     local Gradient = Instance.new("UIGradient")
-    Gradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
-        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(200, 180, 255)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(130, 170, 255))
-    })
-    Gradient.Rotation = 45
+    Gradient.Color = TextGradientColors
+    Gradient.Rotation = 0
     Gradient.Parent = Label
 
+    TweenService:Create(
+        Gradient,
+        TweenInfo.new(
+            6,
+            Enum.EasingStyle.Sine,
+            Enum.EasingDirection.InOut,
+            -1,
+            true
+        ),
+        {Rotation = 45}
+    ):Play()
+
     local Stroke = Instance.new("UIStroke")
-    Stroke.Thickness = 0.4
+    Stroke.Thickness = 0.45
     Stroke.Color = Purple
-    Stroke.Transparency = 0.75
+    Stroke.Transparency = 0.72
     Stroke.Parent = Label
 
     return Gradient
@@ -122,6 +188,8 @@ local function NewLabel(Parent, Text, Size, Position, FontSize, Font, Color, Add
     L.TextColor3 = Color or TextColor
     L.TextSize = FontSize
     L.Font = Font or Enum.Font.Gotham
+    L.TextScaled = false
+    L.RichText = false
     L.Parent = Parent
 
     if AddHighlight then
@@ -138,16 +206,61 @@ local function NewButton(Parent, Text, Size, Position, Color)
     B.BackgroundColor3 = Color
     B.BorderSizePixel = 0
     B.Text = Text
-    B.TextColor3 = Color3.new(1, 1, 1)
+    B.TextColor3 = White
     B.TextSize = 11
     B.Font = Enum.Font.GothamBold
     B.AutoButtonColor = false
+    B.ClipsDescendants = true
     B.Parent = Parent
+
     Corner(B, 8)
+
+    local Stroke = Instance.new("UIStroke")
+    Stroke.Thickness = 0.8
+    Stroke.Color = SoftPurple
+    Stroke.Transparency = 0.65
+    Stroke.Parent = B
+
+    B.MouseEnter:Connect(function()
+        Tween(B, 0.2, Enum.EasingStyle.Quint, {
+            BackgroundColor3 = Color3.fromRGB(65, 43, 110)
+        })
+
+        Tween(Stroke, 0.2, Enum.EasingStyle.Quint, {
+            Transparency = 0.1
+        })
+    end)
+
+    B.MouseLeave:Connect(function()
+        Tween(B, 0.2, Enum.EasingStyle.Quint, {
+            BackgroundColor3 = Color
+        })
+
+        Tween(Stroke, 0.2, Enum.EasingStyle.Quint, {
+            Transparency = 0.65
+        })
+    end)
+
+    B.MouseButton1Down:Connect(function()
+        Tween(B, 0.1, Enum.EasingStyle.Quad, {
+            BackgroundColor3 = DeepPurple
+        })
+    end)
+
+    B.MouseButton1Up:Connect(function()
+        Tween(B, 0.15, Enum.EasingStyle.Back, {
+            BackgroundColor3 = Color
+        })
+    end)
+
     return B
 end
 
+--==================================================
 -- MAIN PANEL
+-- ORIGINAL SIZE: 190 x 210
+--==================================================
+
 local Main = Instance.new("Frame")
 Main.Name = "Main"
 Main.Size = UDim2.fromOffset(190, 210)
@@ -155,23 +268,70 @@ Main.Position = UDim2.new(0.5, -95, 0.5, -105)
 Main.BackgroundColor3 = Dark
 Main.BorderSizePixel = 0
 Main.Active = true
+Main.ClipsDescendants = false
 Main.Parent = Gui
-Corner(Main, 12)
-GradientOutline(Main, 1.6)
 
+Corner(Main, 12)
+GradientOutline(Main, 1.8)
+
+local MainGradient = Instance.new("UIGradient")
+MainGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(27, 19, 47)),
+    ColorSequenceKeypoint.new(0.5, Dark),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(18, 27, 52))
+})
+MainGradient.Rotation = 35
+MainGradient.Parent = Main
+
+TweenService:Create(
+    MainGradient,
+    TweenInfo.new(
+        8,
+        Enum.EasingStyle.Sine,
+        Enum.EasingDirection.InOut,
+        -1,
+        true
+    ),
+    {Rotation = 125}
+):Play()
+
+-- PANEL SHADOW
+local Shadow = Instance.new("UIStroke")
+Shadow.Thickness = 5
+Shadow.Color = Purple
+Shadow.Transparency = 0.88
+Shadow.Parent = Main
+
+--==================================================
 -- LOGO
+--==================================================
+
 local Logo = Instance.new("Frame")
 Logo.Size = UDim2.fromOffset(23, 23)
 Logo.Position = UDim2.fromOffset(9, 5)
 Logo.BackgroundColor3 = Purple
 Logo.BorderSizePixel = 0
+Logo.ZIndex = 3
 Logo.Parent = Main
+
 Corner(Logo, 7)
 
 local LogoGradient = Instance.new("UIGradient")
-LogoGradient.Color = ColorSequence.new(Blue, Purple)
+LogoGradient.Color = GradientColors
 LogoGradient.Rotation = 45
 LogoGradient.Parent = Logo
+
+TweenService:Create(
+    LogoGradient,
+    TweenInfo.new(3, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1),
+    {Rotation = 405}
+):Play()
+
+local LogoStroke = Instance.new("UIStroke")
+LogoStroke.Thickness = 1
+LogoStroke.Color = Color3.fromRGB(195, 150, 255)
+LogoStroke.Transparency = 0.2
+LogoStroke.Parent = Logo
 
 local LogoText = NewLabel(
     Logo,
@@ -181,8 +341,12 @@ local LogoText = NewLabel(
     16,
     Enum.Font.GothamBlack
 )
+LogoText.ZIndex = 4
 
--- TITLE
+--==================================================
+-- HEADER
+--==================================================
+
 local Header = NewLabel(
     Main,
     "PYROVEX HUB",
@@ -193,8 +357,11 @@ local Header = NewLabel(
     TextColor,
     true
 )
-Header.TextXAlignment = Enum.TextXAlignment.Left
 
+Header.TextXAlignment = Enum.TextXAlignment.Left
+Header.ZIndex = 3
+
+-- HEADER DIVIDER
 local Divider = Instance.new("Frame")
 Divider.Size = UDim2.new(1, -18, 0, 1)
 Divider.Position = UDim2.fromOffset(9, 31)
@@ -202,7 +369,20 @@ Divider.BackgroundColor3 = Color3.fromRGB(65, 60, 95)
 Divider.BorderSizePixel = 0
 Divider.Parent = Main
 
--- ADMIN BADGE
+local DividerGradient = Instance.new("UIGradient")
+DividerGradient.Color = GradientColors
+DividerGradient.Parent = Divider
+
+TweenService:Create(
+    DividerGradient,
+    TweenInfo.new(4, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1),
+    {Offset = Vector2.new(1, 0)}
+):Play()
+
+--==================================================
+-- ADMIN BADGE FUNCTION
+--==================================================
+
 local function UpdateBadge()
     local Character = Player.Character
     if not Character then return end
@@ -248,6 +428,7 @@ local function UpdateBadge()
         Red,
         true
     )
+
     Admin.TextStrokeColor3 = Color3.fromRGB(35, 8, 15)
     Admin.TextStrokeTransparency = 0.15
     Admin.LayoutOrder = 1
@@ -262,10 +443,14 @@ local function UpdateBadge()
         Blue,
         true
     )
+
     Verified.LayoutOrder = 2
 end
 
+--==================================================
 -- ADMIN BADGE TOGGLE
+--==================================================
+
 local AdminRow = Instance.new("Frame")
 AdminRow.Size = UDim2.new(1, -18, 0, 26)
 AdminRow.Position = UDim2.fromOffset(9, 36)
@@ -282,6 +467,7 @@ local AdminLabel = NewLabel(
     TextColor,
     true
 )
+
 AdminLabel.TextXAlignment = Enum.TextXAlignment.Left
 
 local AdminToggle = NewButton(
@@ -291,28 +477,42 @@ local AdminToggle = NewButton(
     UDim2.new(1, -37, 0.5, -9),
     Color3.fromRGB(48, 47, 63)
 )
+
 Corner(AdminToggle, 20)
 
 local AdminKnob = Instance.new("Frame")
 AdminKnob.Size = UDim2.fromOffset(13, 13)
 AdminKnob.Position = UDim2.fromOffset(3, 3)
-AdminKnob.BackgroundColor3 = Color3.fromRGB(245, 245, 255)
+AdminKnob.BackgroundColor3 = White
 AdminKnob.BorderSizePixel = 0
 AdminKnob.Parent = AdminToggle
+
 Corner(AdminKnob, 20)
+
+local AdminKnobStroke = Instance.new("UIStroke")
+AdminKnobStroke.Thickness = 0.8
+AdminKnobStroke.Color = Color3.fromRGB(210, 190, 255)
+AdminKnobStroke.Transparency = 0.3
+AdminKnobStroke.Parent = AdminKnob
 
 AdminToggle.Activated:Connect(function()
     AdminEnabled = not AdminEnabled
-    TweenService:Create(AdminToggle, TweenInfo.new(0.3, Enum.EasingStyle.Quart), {
+
+    Tween(AdminToggle, 0.4, Enum.EasingStyle.Quint, {
         BackgroundColor3 = AdminEnabled and Purple or Color3.fromRGB(48, 47, 63)
-    }):Play()
-    TweenService:Create(AdminKnob, TweenInfo.new(0.3, Enum.EasingStyle.Back), {
+    })
+
+    Tween(AdminKnob, 0.4, Enum.EasingStyle.Back, {
         Position = AdminEnabled and UDim2.fromOffset(21, 3) or UDim2.fromOffset(3, 3)
-    }):Play()
+    })
+
     UpdateBadge()
 end)
 
+--==================================================
 -- ANTI HIT TOGGLE
+--==================================================
+
 local AntiHitRow = Instance.new("Frame")
 AntiHitRow.Size = UDim2.new(1, -18, 0, 26)
 AntiHitRow.Position = UDim2.fromOffset(9, 68)
@@ -329,6 +529,7 @@ local AntiHitLabel = NewLabel(
     TextColor,
     true
 )
+
 AntiHitLabel.TextXAlignment = Enum.TextXAlignment.Left
 
 local AntiHitToggle = NewButton(
@@ -338,28 +539,42 @@ local AntiHitToggle = NewButton(
     UDim2.new(1, -37, 0.5, -9),
     Color3.fromRGB(48, 47, 63)
 )
+
 Corner(AntiHitToggle, 20)
 
 local AntiHitKnob = Instance.new("Frame")
 AntiHitKnob.Size = UDim2.fromOffset(13, 13)
 AntiHitKnob.Position = UDim2.fromOffset(3, 3)
-AntiHitKnob.BackgroundColor3 = Color3.fromRGB(245, 245, 255)
+AntiHitKnob.BackgroundColor3 = White
 AntiHitKnob.BorderSizePixel = 0
 AntiHitKnob.Parent = AntiHitToggle
+
 Corner(AntiHitKnob, 20)
+
+local AntiHitKnobStroke = Instance.new("UIStroke")
+AntiHitKnobStroke.Thickness = 0.8
+AntiHitKnobStroke.Color = Color3.fromRGB(210, 190, 255)
+AntiHitKnobStroke.Transparency = 0.3
+AntiHitKnobStroke.Parent = AntiHitKnob
 
 AntiHitToggle.Activated:Connect(function()
     AntiHitActive = not AntiHitActive
-    TweenService:Create(AntiHitToggle, TweenInfo.new(0.3, Enum.EasingStyle.Quart), {
+
+    Tween(AntiHitToggle, 0.4, Enum.EasingStyle.Quint, {
         BackgroundColor3 = AntiHitActive and Purple or Color3.fromRGB(48, 47, 63)
-    }):Play()
-    TweenService:Create(AntiHitKnob, TweenInfo.new(0.3, Enum.EasingStyle.Back), {
+    })
+
+    Tween(AntiHitKnob, 0.4, Enum.EasingStyle.Back, {
         Position = AntiHitActive and UDim2.fromOffset(21, 3) or UDim2.fromOffset(3, 3)
-    }):Play()
+    })
+
     print("🛡️ Anti Hit:", AntiHitActive and "ON" or "OFF")
 end)
 
--- ANTI AFK (LOCKED/PREMIUM — NO TOGGLE, NO HIGHLIGHT)
+--==================================================
+-- ANTI AFK LOCKED
+--==================================================
+
 local AntiAfkRow = Instance.new("Frame")
 AntiAfkRow.Size = UDim2.new(1, -18, 0, 26)
 AntiAfkRow.Position = UDim2.fromOffset(9, 100)
@@ -376,9 +591,13 @@ local AntiAfkLabel = NewLabel(
     Muted,
     false
 )
+
 AntiAfkLabel.TextXAlignment = Enum.TextXAlignment.Left
 
--- SPEED AMOUNT INPUT
+--==================================================
+-- SPEED INPUT
+--==================================================
+
 local SpeedBox = Instance.new("TextBox")
 SpeedBox.Name = "SpeedAmount"
 SpeedBox.Size = UDim2.new(1, -18, 0, 25)
@@ -394,8 +613,31 @@ SpeedBox.Font = Enum.Font.GothamMedium
 SpeedBox.ClearTextOnFocus = false
 SpeedBox.TextXAlignment = Enum.TextXAlignment.Center
 SpeedBox.Parent = Main
+
 Corner(SpeedBox, 7)
-GradientOutline(SpeedBox, 1.2)
+
+local SpeedGradient = Instance.new("UIGradient")
+SpeedGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(29, 22, 50)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(25, 24, 42)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 32, 60))
+})
+SpeedGradient.Rotation = 0
+SpeedGradient.Parent = SpeedBox
+
+GradientOutline(SpeedBox, 1.3)
+
+SpeedBox.Focused:Connect(function()
+    Tween(SpeedBox, 0.25, Enum.EasingStyle.Quint, {
+        BackgroundColor3 = Color3.fromRGB(40, 30, 68)
+    })
+end)
+
+SpeedBox.FocusLost:Connect(function()
+    Tween(SpeedBox, 0.25, Enum.EasingStyle.Quint, {
+        BackgroundColor3 = Color3.fromRGB(25, 24, 42)
+    })
+end)
 
 -- NUMBERS ONLY
 SpeedBox:GetPropertyChangedSignal("Text"):Connect(function()
@@ -405,7 +647,10 @@ SpeedBox:GetPropertyChangedSignal("Text"):Connect(function()
     end
 end)
 
+--==================================================
 -- APPLY SPEED BUTTON
+--==================================================
+
 local ApplySpeed = NewButton(
     Main,
     "Apply Speed",
@@ -413,50 +658,79 @@ local ApplySpeed = NewButton(
     UDim2.fromOffset(9, 165),
     Color3.fromRGB(30, 27, 53)
 )
+
 ApplySpeed.TextSize = 11
-GradientOutline(ApplySpeed, 1.3)
+ApplySpeed.Font = Enum.Font.GothamBold
+
+local ApplyGradient = Instance.new("UIGradient")
+ApplyGradient.Color = GradientColors
+ApplyGradient.Rotation = 0
+ApplyGradient.Transparency = NumberSequence.new({
+    NumberSequenceKeypoint.new(0, 0.75),
+    NumberSequenceKeypoint.new(0.5, 0.9),
+    NumberSequenceKeypoint.new(1, 0.75)
+})
+ApplyGradient.Parent = ApplySpeed
+
+TweenService:Create(
+    ApplyGradient,
+    TweenInfo.new(4, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1),
+    {Rotation = 360}
+):Play()
+
+GradientOutline(ApplySpeed, 1.4)
 
 ApplySpeed.MouseEnter:Connect(function()
-    TweenService:Create(ApplySpeed, TweenInfo.new(0.2), {
+    Tween(ApplySpeed, 0.2, Enum.EasingStyle.Quint, {
         BackgroundColor3 = Color3.fromRGB(47, 39, 83)
-    }):Play()
+    })
 end)
 
 ApplySpeed.MouseLeave:Connect(function()
-    TweenService:Create(ApplySpeed, TweenInfo.new(0.2), {
+    Tween(ApplySpeed, 0.2, Enum.EasingStyle.Quint, {
         BackgroundColor3 = Color3.fromRGB(30, 27, 53)
-    }):Play()
+    })
 end)
 
+--==================================================
 -- ANTI-HIT FUNCTION
+-- ORIGINAL LOGIC PRESERVED
+--==================================================
+
 _G.AntiHitActive = false
 
-if _G.AntiHitConnection then _G.AntiHitConnection:Disconnect() end
+if _G.AntiHitConnection then
+    _G.AntiHitConnection:Disconnect()
+end
 
 _G.AntiHitConnection = RunService.Stepped:Connect(function()
     if not _G.AntiHitActive then return end
-    
+
     local character = Player.Character
+
     if character and character:FindFirstChild("Humanoid") and character.Humanoid.Health > 0 then
         for _, part in pairs(character:GetChildren()) do
             if part:IsA("BasePart") then
                 part.CanCollide = false
             end
         end
-        
+
         pcall(function()
-            local hazards = Workspace:FindFirstChild("Guards") 
-                or Workspace:FindFirstChild("Monsters") 
-                or Workspace:FindFirstChild("Traps") 
+            local hazards = Workspace:FindFirstChild("Guards")
+                or Workspace:FindFirstChild("Monsters")
+                or Workspace:FindFirstChild("Traps")
                 or Workspace:FindFirstChild("Obstacles")
-                
+
             if hazards then
                 for _, hazard in pairs(hazards:GetDescendants()) do
                     if hazard:IsA("BasePart") then
-                        local touchInterest = hazard:FindFirstChildWhichIsA("TouchTransmitter") or hazard:FindFirstChild("TouchInterest")
+                        local touchInterest = hazard:FindFirstChildWhichIsA("TouchTransmitter")
+                            or hazard:FindFirstChild("TouchInterest")
+
                         if touchInterest then
                             touchInterest:Destroy()
                         end
+
                         hazard.CanCollide = false
                     end
                 end
@@ -467,7 +741,11 @@ end)
 
 print("🛡️ Custom Anti-Hit / God-Mode Function Loaded Successfully!")
 
+--==================================================
 -- SAFE BYPASS SPEED LOOP
+-- ORIGINAL LOGIC PRESERVED
+--==================================================
+
 _G.UltimateSpeedConnection = nil
 
 local function UpdateSpeedSystem()
@@ -475,19 +753,26 @@ local function UpdateSpeedSystem()
         _G.UltimateSpeedConnection:Disconnect()
     end
 
-    if not _G.BypassActive then return end
+
+        if not _G.BypassActive then return end
 
     _G.UltimateSpeedConnection = RunService.Heartbeat:Connect(function(deltaTime)
         if not _G.BypassActive then return end
-        
+
         local character = Player.Character
         local rootPart = character and character:FindFirstChild("HumanoidRootPart")
         local humanoid = character and character:FindFirstChild("Humanoid")
-        
+
         if rootPart and humanoid and humanoid.Health > 0 then
             if humanoid.MoveDirection.Magnitude > 0 then
                 local velocityBoost = humanoid.MoveDirection * (_G.SafeBypassSpeed * deltaTime)
-                rootPart.CFrame = rootPart.CFrame + Vector3.new(velocityBoost.X, 0, velocityBoost.Z)
+
+                rootPart.CFrame = rootPart.CFrame + Vector3.new(
+                    velocityBoost.X,
+                    0,
+                    velocityBoost.Z
+                )
+
                 rootPart.AssemblyLinearVelocity = Vector3.new(0, 0, 0)
             end
         end
@@ -498,23 +783,29 @@ end
 ApplySpeed.Activated:Connect(function()
     local input = SpeedBox.Text
     local speedAmount = tonumber(input)
-    
+
     if speedAmount and speedAmount > 0 then
         _G.SafeBypassSpeed = speedAmount
         _G.BypassActive = true
         UpdateSpeedSystem()
+
         print("💎 Speed Updated! Current Speed: " .. tostring(_G.SafeBypassSpeed))
     else
         _G.BypassActive = false
+
         if _G.UltimateSpeedConnection then
             _G.UltimateSpeedConnection:Disconnect()
             _G.UltimateSpeedConnection = nil
         end
+
         print("Speed Disabled — enter a number to enable")
     end
 end)
 
+--==================================================
 -- DRAG SYSTEM
+--==================================================
+
 local function MakeDraggable(Object, Handle)
     local Dragging = false
     local DragStart
@@ -524,9 +815,11 @@ local function MakeDraggable(Object, Handle)
     Handle.InputBegan:Connect(function(Input)
         if Input.UserInputType == Enum.UserInputType.MouseButton1
             or Input.UserInputType == Enum.UserInputType.Touch then
+
             Dragging = true
             DragStart = Input.Position
             StartPosition = Object.Position
+
             Input.Changed:Connect(function()
                 if Input.UserInputState == Enum.UserInputState.End then
                     Dragging = false
@@ -538,6 +831,7 @@ local function MakeDraggable(Object, Handle)
     Handle.InputChanged:Connect(function(Input)
         if Input.UserInputType == Enum.UserInputType.MouseMovement
             or Input.UserInputType == Enum.UserInputType.Touch then
+
             DragInput = Input
         end
     end)
@@ -545,6 +839,7 @@ local function MakeDraggable(Object, Handle)
     UserInputService.InputChanged:Connect(function()
         if Dragging and DragInput then
             local Delta = DragInput.Position - DragStart
+
             Object.Position = UDim2.new(
                 StartPosition.X.Scale,
                 StartPosition.X.Offset + Delta.X,
@@ -557,17 +852,27 @@ end
 
 MakeDraggable(Main, Header)
 
+--==================================================
 -- RESPAWN SUPPORT
+--==================================================
+
 Player.CharacterAdded:Connect(function()
     task.wait(1)
+
     UpdateBadge()
+
     if _G.BypassActive then
         UpdateSpeedSystem()
     end
 end)
 
+--==================================================
 -- INITIALIZE
+--==================================================
+
 _G.SafeBypassSpeed = 0
 _G.BypassActive = false
+
 print("💎 PYROVEX HUB Loaded — Recommended Speed: 280")
 print("🔒 Anti AFK — Premium Feature Locked")
+print("✨ Premium UI Enhancement Loaded Successfully!")
